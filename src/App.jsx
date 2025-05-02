@@ -1,35 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState, useContext } from 'react'
+import Post from './components/post'
+import { DataContext } from "./DataProvider";
+import { Header } from './components/header';
+import { Sidebar } from './components/sidebar';
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const { posts, comments, users } = useContext(DataContext);
+
+  if(posts === null && localStorage.getItem("posts") === null) return (<p>Loading posts...</p>);
+
+  let local_posts = JSON.parse(localStorage.getItem("posts") || "[]");
+  console.debug(local_posts);
+
+  let postComponents = local_posts.map(post => {
+    return <Post key={post.id} {...post} />;
+  });
+
+  console.debug("nPosts: " + postComponents.length);
 
   return (
-    <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+          <Header />
+          <div className="body">
+              <div><Sidebar/></div>
+              <div className="posts">{postComponents}</div>
+              <div>Some bar</div>
+          </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  );
 }
 
 export default App

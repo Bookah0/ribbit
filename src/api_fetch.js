@@ -7,7 +7,7 @@ export async function fetch_comments(){
 }
 
 export async function fetch_users(){
-    return fetch_from('https://dummyjson.com/users');
+    return fetch_from('https://dummyjson.com/users?limit=0');
 }
 
 async function fetch_from(url){
@@ -19,5 +19,5 @@ async function fetch_from(url){
     }
     
     const json = await result.json();
-    return json.posts;
+    return Object.values(json)[0];
 }

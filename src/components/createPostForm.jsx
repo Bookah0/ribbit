@@ -1,56 +1,84 @@
-import React, { useState } from 'react';
-import Dropdown from 'react-bootstrap/Dropdown';
-import './createPostForm.css'
+// TODO
+// Test dropdowns & UI
 
-export function createPostForm() {
+import React, { useState } from 'react';
+import { addItem, getItems } from '../local';
+import '../page.css';
+
+export function CreatePostForm() {
 
     const [chosenUser, setUser] = useState(null);
-    const [addedTags, addTag] = useState([]);
+    const [addedTags, setAddedTags] = useState([]);
+    const [titleText, setTitleText] = useState(null);
+    const [bodyText, setBodyText] = useState([]);
+
+    function handleUserChange(e) {
+        const userId = e.target.value;
+        setUser(userId);
+    }
+
+    function handleTagAdd(e) {
+        const tag = e.target.value;
+        if (tag && !addedTags.includes(tag)) {
+            setAddedTags([...addedTags, tag]);
+        }
+    }
+
+    function uploadPost()
+    {
+        let post = 
+        {
+            "id": Date.now(),
+            "title": titleText,
+            "body": bodyText,
+            "tags": addedTags,
+            "reactions": {
+                "likes": 0,
+                "dislikes": 0
+            },
+            "views": 0,
+            "userId": chosenUser
+        }
+
+        addItem("posts", post);
+    }
+
+    let allTags = []
+    getItems("posts").map(post => {
+        allTags.push(...post.tags);
+    });
+    const uniqueTags = [...new Set(allTags)];
+    console.debug(uniqueTags);
 
     return (
-        <div className="">
-            <input type="text" placeholder="Title"></input>
-            <input type="text" placeholder="Content"></input>
-            <Dropdown>
-                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                    Select user
-                </Dropdown.Toggle>
-
-                {getUserDropDownItems()}
-            </Dropdown>
-
-            <Dropdown>
-                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                    Add tags
-                </Dropdown.Toggle>
-
-                {getTagDropDownItems()}
-            </Dropdown>
-            <button>Post</button>
+        <div className="form-body">
+            <div>
+                <input type="text" placeholder="Title..." onChange={(e) => setTitleText(e.target.value)} />
+    
+                <label>Select user: </label>
+                <select onChange={handleUserChange}>
+                    <option value="">-- Select user --</option>
+                    {getItems("users").map(user => (
+                        <option key={user.id} value={user.id}>
+                            {user.username}
+                        </option>
+                    ))}
+                </select>
+            </div>
+    
+            <div>
+                <label>Add tags: </label>
+                <select onChange={handleTagAdd}>
+                    <option value="">-- Select tag --</option>
+                    {uniqueTags.map(tag => (
+                        <option key={tag} value={tag}>{tag}</option>
+                    ))}
+                </select>
+            </div>
+    
+            <p>Tags: {addedTags.join(' ')}</p>
+            <input type="text" placeholder="Body text" onChange={(e) => setBodyText(e.target.value)} />
+            <button onClick={uploadPost}>Post</button>
         </div>
     );
-}
-
-function getUserDropDownItems(){
-    let users = JSON.parse(localStorage.getItem("users") || "[]");
-
-    let dropdownItems = users.map(user => {
-        return <Dropdown.Item href='#/user.id' {...user}>user.username</Dropdown.Item>;
-    });
-
-    return <Dropdown.Menu>
-        {dropdownItems}
-    </Dropdown.Menu>
-}
-
-function getTagDropDownItems(){
-    let tags = JSON.parse(localStorage.getItem("tags") || "[]");
-
-    let dropdownItems = tags.map(tag => {
-        return <Dropdown.Item href='#/tag.id' {...tag}>tag</Dropdown.Item>;
-    });
-
-    return <Dropdown.Menu>
-        {dropdownItems}
-    </Dropdown.Menu>
 }

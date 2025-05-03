@@ -1,31 +1,30 @@
 import { useContext } from "react";
-import { Header } from "./components/header";
-import Post from "./components/post";
-import { Sidebar } from "./components/sidebar";
+import { Header } from "./components/Header";
+import { Sidebar } from "./components/Sidebar";
 import { DataContext } from "./DataProvider";
+import { getItems } from "./local";
+import MinPost from "./components/MinPost";
+import "./page.css";
 
 export function HomePage(){
-    const { posts, comments, users } = useContext(DataContext);
-
+    const { posts } = useContext(DataContext);
     if(posts === null && localStorage.getItem("posts") === null) return (<p>Loading posts...</p>);
-
-    let local_posts = JSON.parse(localStorage.getItem("posts") || "[]");
-    console.debug(local_posts);
-
-    let postComponents = local_posts.map(post => {
-    return <Post key={post.id} {...post} />;
+    
+    let postComponents = getItems("posts").map(post => {
+        return <MinPost key={post.id} {...post} />;
     });
 
-    console.debug("nPosts: " + postComponents.length);
-
     return (
-        <div>
+        <div className="page">
             <Header />
-            <div className="body">
-                <div><Sidebar/></div>
-                <div className="posts">{postComponents}</div>
-                <div>Some bar</div>
+            <div className="main">
+                <Sidebar />
+                <div className="content">
+                    {postComponents}
+                </div>
             </div>
         </div>
     );
 }
+
+export default HomePage;

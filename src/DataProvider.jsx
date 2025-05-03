@@ -10,16 +10,11 @@ export function DataProvider({children})
     const [users, setUsers] = useState(null);
 
     useEffect(() => {
-        console.debug("Using effect");
         const fetchData = async () => {
-            console.debug("running fetch data");
             if (localStorage.getItem("posts") === null) {
                 const fetchedPosts = await fetch_posts();
-                console.debug(fetchedPosts.length);
                 setPosts(fetchedPosts);
                 localStorage.setItem("posts", JSON.stringify(fetchedPosts));
-            } else{
-                console.debug("Posts already in local storage");
             }
 
             if (localStorage.getItem("comments") === null) {

@@ -1,14 +1,17 @@
 import React from 'react';
-import './header.css'
+import '../page.css';
+import { Link } from 'react-router-dom';
 
 export function Header() {
     return (
         <div className="header">
-            <p>Logo</p>
+            <p>Ribbit</p>
             <div style={{margin: "auto"}}>
                 <input className="searchbar" type="text" placeholder="Search.." />
             </div>
-            <button>Login button</button>
+            <Link to={"/createPost/"}>
+                <button>Make post</button>
+            </Link>
             <button>Hamburger</button>
         </div>
     );

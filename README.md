@@ -1,5 +1,5 @@
 # Ribbit
-A small React project built as part of a school assignment. The focus was on learning the basics of JavaScript, React, and CSS (with minimal HTML).
+A simple local Reddit clone. A React project built as part of a school assignment. The focus was on learning the basics of JavaScript, React, CSS and HTML.
 
 ## Tech Stack
 - JavaScript
